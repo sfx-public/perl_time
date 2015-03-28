@@ -27,12 +27,12 @@ say "\nНачало и конец месяца и недели от текуще
 
 cmpthese( $count, {
     'Time::Moment' => sub {
-        my $tm = Time::Moment->now;
-        my $week_begin  = $tm->with_day_of_week(1)
+        my $tm = Time::Moment->now
             ->with_hour(0)
             ->with_minute(0)
             ->with_second(0)
             ->with_nanosecond(0);
+        my $week_begin  = $tm->with_day_of_week(1);
         my $week_end    = $tm->with_day_of_week(7);
         my $month_begin = $tm->with_day_of_month(1);
         my $month_end   = $tm->with_day_of_month( $tm->length_of_month );
