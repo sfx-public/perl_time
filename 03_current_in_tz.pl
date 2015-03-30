@@ -19,8 +19,11 @@ use Time::Seconds;
 
 use Panda::Date ();
 
+use Date::Calc ();
+
 # Подготовка
 my $dm = Date::Manip::Date->new;
+my @dc_tz = (0, 10, 0, 0); # Обозначение временной зоны UTC+10 в виде дельты DHMS
 
 # Тесты граничиваем тесты по времени а не по количеству циклов. 5 секунд каждый.
 my $count = -5;
@@ -28,23 +31,29 @@ my $count = -5;
 say "\nСоздание объектов в заданной временной зоне (UTC+10):\n";
 
 cmpthese( $count, {
-    'Time::Moment' => sub {
+    'T::M' => sub {
         my $tm = Time::Moment->now_utc;
         my $tm_with_offset = $tm->with_offset_same_instant(600); # тут смещение в минутах
     },
-    'DateTime' => sub {
+    'DT' => sub {
         my $dt = DateTime->now( time_zone => '+1000' );
     },
-    'Date::Manip' => sub {
+    'D::M' => sub {
         my $date = $dm->new_date;
         $date->parse('now gtm+10');
     },
-    'Time::Piece' => sub {
+    'T::P' => sub {
         my $tp = Time::Piece->gmtime;
         $tp += 60*60*10; # тут смещение в секундах
     },
-    'Panda::Date' => sub {
+    'P::D' => sub {
         my $pd = Panda::Date->new( time, 'UTC' );
         $pd->to_tz('UTC-10');
+    },
+    'D::C' => sub {
+        my @dc = Date::Calc::Add_Delta_DHMS(
+            Date::Calc::Today_and_Now(1),
+            @dc_tz,
+        );
     },
 });

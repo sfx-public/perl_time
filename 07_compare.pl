@@ -22,6 +22,8 @@ use Time::Seconds;
 
 use Panda::Date ();
 
+use Date::Calc ();
+
 # Подготовим дату перед циклами проверки
 my $tm1 = Time::Moment->from_string('2015-02-18T10:50:31.521345123+10:00');
 my $tm2 = Time::Moment->from_string('2015-02-18T10:50:31.521345124+10:00');
@@ -42,25 +44,31 @@ my $tp2 = Time::Piece->strptime('2015-02-18T10:50:32+1000', '%Y-%m-%dT%H:%M:%S%z
 my $pd1 = Panda::Date->new('2015-02-18 10:50:31');
 my $pd2 = Panda::Date->new('2015-02-18 10:50:32');
 
+my @dc1 = (2015,2,18,10,50,31);
+my @dc2 = (2015,2,18,10,50,32);
+
 # Тесты граничиваем тесты по времени а не по количеству циклов. 5 секунд каждый.
 my $count = -5;
 
 say "\nСравнение дат:\n";
 
 cmpthese( $count, {
-    'Time::Moment' => sub {
+    'T::M' => sub {
         my $result = $tm1 <=> $tm2;
     },
-    'DateTime' => sub {
+    'DT' => sub {
         my $result = DateTime->compare( $dt1, $dt2 );
     },
-    'Date::Manip' => sub {
+    'D::M' => sub {
         my $result = $dm_date1->cmp($dm_date2);
     },
-    'Time::Piece' => sub {
+    'T::P' => sub {
         my $result = $tp1 <=> $tp2;
     },
-    'Panda::Date' => sub {
+    'P::D' => sub {
         my $result = $pd1 <=> $pd2;
+    },
+    'D::C' => sub {
+        my $reselut = Date::Calc::Delta_DHMS(@dc1,@dc2);
     },
 });

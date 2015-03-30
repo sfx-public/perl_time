@@ -18,6 +18,7 @@ use Time::Piece ();
 
 use Panda::Date ();
 
+use Date::Calc ();
 
 # Подготовка
 my $dm = Date::Manip::Date->new;
@@ -28,20 +29,23 @@ my $count = -5;
 say "\nСоздание объектов с текущей (UTC) датой:\n";
 
 cmpthese( $count, {
-    'Time::Moment' => sub {
+    'T::M' => sub {
         my $tm = Time::Moment->now_utc;
     },
-    'DateTime' => sub {
+    'DT' => sub {
         my $dt = DateTime->now( time_zone => 'UTC' );
     },
-    'Date::Manip' => sub {
+    'D::M' => sub {
         my $date = $dm->new_date;
         $date->parse('now gtm');
     },
-    'Time::Piece' => sub {
+    'T::P' => sub {
         my $tp = Time::Piece->gmtime;
     },
-    'Panda::Date' => sub {
+    'P::D' => sub {
         my $pd = Panda::Date->new( time, 'UTC' );
+    },
+    'D::C' => sub {
+        my @dc = Date::Calc::Today_and_Now(1);
     },
 });

@@ -18,6 +18,7 @@ use Time::Piece ();
 
 use Panda::Date ();
 
+use Date::Calc ();
 
 # Подготовка
 my $dm = Date::Manip::Date->new;
@@ -28,26 +29,29 @@ my $count = -5;
 say "\nСоздание объектов с текущей (локальной) датой:\n";
 
 cmpthese( $count, {
-    'Time::Moment' => sub {
+    'T::M' => sub {
         my $tm = Time::Moment->now;
     },
-    'DateTime' => sub {
+    'DT' => sub {
         my $dt = DateTime->now;
     },
-    'Date::Manip' => sub {
+    'D::M' => sub {
         my $date = $dm->new_date;
         $date->parse('now');
     },
-    'Time::Piece' => sub {
+    'T::P' => sub {
         my $tp = Time::Piece->localtime;
     },
-    'Panda::Date (now)' => sub {
+    'P::D (now)' => sub {
         my $pd = Panda::Date::now;
     },
-    'Panda::Date (new)' => sub {
+    'P::D (new)' => sub {
         my $pd = Panda::Date->new;
     },
-    'Panda::Date (new time)' => sub {
+    'P::D (new time)' => sub {
         my $pd = Panda::Date->new(time);
+    },
+    'D::C' => sub {
+        my @dc = Date::Calc::Today_and_Now();
     },
 });

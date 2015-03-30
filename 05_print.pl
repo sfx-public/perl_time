@@ -41,19 +41,19 @@ my $count = -5;
 say "\nПолучение строки по шаблону:\n";
 
 cmpthese( $count, {
-    'Time::Moment' => sub {
+    'T::M' => sub {
         my $str = $tm->strftime("%Y.%m.%d %H-%M-%S (%f) %z");
     },
-    'DateTime' => sub {
+    'DT' => sub {
         my $str = $dt_formatter->format_datetime($dt);
     },
-    'Date::Manip' => sub {
+    'D::M' => sub {
         my $str = $dm_date->printf("%Y.%m.%d %H-%M-%S (%f) %z");
     },
-    'Time::Piece' => sub {
+    'T::P' => sub {
         my $str = $tp->strftime("%Y.%m.%d %H-%M-%S %z");
     },
-    'Panda::Date' => sub {
+    'P::D' => sub {
         my $str = $pd->strftime("%Y.%m.%d %H-%M-%S %z");
     },
 });
